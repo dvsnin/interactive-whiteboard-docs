@@ -173,6 +173,8 @@ sequenceDiagram
     Frontend -->> User: Отображение доски с содержимым
 ```
 
+### Открытие доски как гость
+
 ```mermaid
 sequenceDiagram
 participant Guest as Гость
