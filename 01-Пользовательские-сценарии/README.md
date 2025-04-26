@@ -150,3 +150,38 @@ flowchart TD
     class A1,A2,A3,B1,B2,B3,C1,C2,C3 phase;
     class E1,E2,E3,E4,E5,E6,E7,E8,E9 emotion;
 ```
+
+## UML Диаграммы взаимодействия при открытии доски
+
+### Открытие доски как зарегистрированный пользователь
+
+```mermaid
+sequenceDiagram
+    participant User as Пользователь
+    participant Frontend as Веб-клиент
+    participant AuthService as Сервис аутентификации
+    participant BoardService as Сервис досок
+    participant WebSocketService as Сервис WebSocket-соединения
+
+    User ->> Frontend: Переход по ссылке на доску
+    Frontend ->> AuthService: Проверка токена доступа
+    AuthService -->> Frontend: Ответ об успешной проверке
+    Frontend ->> BoardService: Запрос данных доски (ID доски)
+    BoardService -->> Frontend: Данные доски (объекты, права доступа)
+    Frontend ->> WebSocketService: Установление WebSocket-соединения
+    WebSocketService -->> Frontend: Подтверждение соединения
+    Frontend -->> User: Отображение доски с содержимым
+
+sequenceDiagram
+    participant Guest as Гость
+    participant Frontend as Веб-клиент
+    participant BoardService as Сервис досок
+    participant WebSocketService as Сервис WebSocket-соединения
+
+    Guest ->> Frontend: Переход по ссылке на доску
+    Frontend ->> BoardService: Запрос данных доски (ID доски, режим только для чтения)
+    BoardService -->> Frontend: Данные доски (объекты, права только на просмотр)
+    Frontend ->> WebSocketService: Установление WebSocket-соединения
+    WebSocketService -->> Frontend: Подтверждение соединения (только на события обновлений)
+    Frontend -->> Guest: Отображение доски в режиме просмотра
+```
