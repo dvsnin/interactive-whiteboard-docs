@@ -171,12 +171,14 @@ sequenceDiagram
     Frontend ->> WebSocketService: Установление WebSocket-соединения
     WebSocketService -->> Frontend: Подтверждение соединения
     Frontend -->> User: Отображение доски с содержимым
+```
 
+```mermaid
 sequenceDiagram
-    participant Guest as Гость
-    participant Frontend as Веб-клиент
-    participant BoardService as Сервис досок
-    participant WebSocketService as Сервис WebSocket-соединения
+participant Guest as Гость
+participant Frontend as Веб-клиент
+participant BoardService as Сервис досок
+participant WebSocketService as Сервис WebSocket-соединения
 
     Guest ->> Frontend: Переход по ссылке на доску
     Frontend ->> BoardService: Запрос данных доски (ID доски, режим только для чтения)
