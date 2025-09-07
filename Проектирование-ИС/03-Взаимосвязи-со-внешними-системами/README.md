@@ -22,28 +22,30 @@
 ## Диаграмма взаимодействий (по уровням)
 
 ```mermaid
-flowchart TB
-    %% Центральная система
-    subgraph Core[System (Interactive Whiteboard)]
-        Gateway[API Gateway/BFF]
-        Services[Microservices (Go)]
-        Data[(PostgreSQL / Redis / S3)]
-        Bus[(Kafka EventBus)]
-    end
-
-    %% Внешние блоки
-    subgraph IdP[Identity Provider]
+flowchart LR
+    %% Внешние блоки слева
+    subgraph IdP[Identity]
         KC[Keycloak]
     end
 
     subgraph Pay[Payments]
-        Tpay[T-pay]
+        Tpay[Tpay]
     end
 
+    %% Центральная система
+    subgraph Core[System]
+        direction TB
+        Gateway[API Gateway BFF]
+        Services[Microservices Go]
+        Data[(Data Stores)]
+        Bus[(Kafka EventBus)]
+    end
+
+    %% Внешние блоки справа
     subgraph Notify[Notifications]
-        Push[FCM/APNs]
-        Mail[SMTP/Email]
-        Chats[Slack/Telegram]
+        Push[Push Service]
+        Mail[SMTP Email]
+        Chats[Slack Telegram]
     end
 
     subgraph Analytics[Analytics]
@@ -51,11 +53,11 @@ flowchart TB
         Mix[Mixpanel]
     end
 
-    subgraph Ops[Monitoring/Logs/CDN]
+    subgraph Ops[Ops]
         CDN[CDN]
-        Mon[Prometheus/Grafana]
+        Mon[Prometheus Grafana]
         Sentry[Sentry]
-        Logs[ELK/Loki/DLP]
+        Logs[ELK Loki DLP]
     end
 
     %% Потоки
