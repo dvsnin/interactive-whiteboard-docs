@@ -77,6 +77,7 @@ flowchart LR
     %% Потоки
     FE --> Gateway
     Gateway <--> KC
+    Gateway --> Services
 
     Services --> Tpay
     Tpay --> Services
