@@ -68,3 +68,20 @@
 - **Шина событий**
     - **Kafka** — доменные события и интеграционные потоки.
     - Схемы: **Schema Registry** (JSON-Schema/Proto).
+
+## Сервисы и назначение
+
+| Сервис / Компонент       | Назначение                                                                                                      | Ключевые технологии                                 |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+| **API Gateway / BFF**    | Единая точка входа (REST/gRPC), маршрутизация, аутентификация, rate-limit, валидация вебхуков (Tpay).           | Go, chi/gin, OpenAPI, gRPC                          |
+| **AuthService**          | Интеграция с Keycloak/Gatekeeper, проверка JWT, маппинг ролей (RBAC).                                           | Go, OIDC/JWT, Keycloak                              |
+| **BoardService**         | CRUD досок/метаданных, политики доступа, сохранение JSON-снимков в S3, генерация presigned ссылок.              | Go, PostgreSQL, S3                                  |
+| **CollabService**        | Реалтайм-редактирование, синхронизация операций (OT/CRDT), presence, курсоры.                                   | Go, WebSocket, Redis                                |
+| **FileService**          | Загрузка/верификация файлов, presigned URL, миниатюры/превью, политики хранения/жизни объектов.                 | Go, S3, Image libs                                  |
+| **PaymentService**       | Инициация платежей/рекуррентных списаний (исходящие в Tpay), обработка статусов через webhooks (через Gateway). | Go, Tpay API/Webhooks, PostgreSQL                   |
+| **NotificationService**  | Консьюмер Kafka; шаблоны и отправка уведомлений (Push/Email/Chats), ретраи/идемпотентность.                     | Go, Kafka, FCM/APNs/SMTP                            |
+| **AdminService**         | Тарифы/лимиты, управление пользователями/воркспейсами, справочники, фиче-флаги.                                 | Go, PostgreSQL                                      |
+| **CronJobs**             | Фоновые задания: валидация тарифов, очистка старых снапшотов, переиндексации, ретраи интеграций.                | K8s CronJob, Go                                     |
+| **Kafka / EventBus**     | Доменные события и интеграционные потоки; фан-аут на аналитику и нотификации (Carrot Quest, Mixpanel, Push).    | Kafka, Schema Registry                              |
+| **Monitoring/Logging**   | Метрики/алерты, централизованные логи, трассировка.                                                             | Prometheus, Grafana, ELK/Loki, OpenTelemetry/Jaeger |
+
