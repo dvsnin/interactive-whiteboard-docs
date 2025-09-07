@@ -91,7 +91,7 @@ flowchart LR
     Bus --> Carrot
     Bus --> Mix
 
-    %% CDN: клиент по presigned URL, origin — S3
+    %% CDN: клиент работает по presigned URL
     FE --> CDN
 
     %% Мониторинг и ошибки
