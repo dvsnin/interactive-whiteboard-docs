@@ -75,7 +75,7 @@ flowchart LR
         tpay[T-pay]
     end
 
-    %% --- Потоки сверху вниз и слева направо ---
+    %% --- Потоки слева направо ---
     ios --> gw
     android --> gw
     web --> gw
@@ -105,7 +105,9 @@ flowchart LR
     pay --> kafka
     admin --> kafka
     notify --> kafka
-    kafka --> notify  %% NotificationService читает события (outbox)
+
+    %% NotificationService читает события из Kafka (outbox)
+    kafka --> notify
 
     %% CronJobs работают с БД/S3/Kafka
     cron --> pg
@@ -119,7 +121,7 @@ flowchart LR
     kafka --> dash
     pay --> tpay
 
-    %% Небольшой тюнинг ширины узлов
+    %% Немного стилей
     classDef wide fill:#fff,stroke:#bbb;
     class gw,auth,board,collab,file,pay,admin,notify,redis,kafka,s3,pg,cron,push,carrot,mix,dash,tpay wide;
 ```
