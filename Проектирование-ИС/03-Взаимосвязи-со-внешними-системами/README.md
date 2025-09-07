@@ -79,8 +79,8 @@ flowchart LR
     Gateway <--> KC
     Gateway --> Services
 
-    %% Взаимодействие с Tpay через Gateway
-    Services --> Gateway
+    %% Платежи: исходящие из сервисов, вебхуки в Gateway
+    Services --> Tpay
     Tpay --> Gateway
 
     Services --> Data
