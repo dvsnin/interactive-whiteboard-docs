@@ -32,7 +32,12 @@
 
 ```mermaid
 flowchart LR
-    %% Внешние блоки слева
+    %% Клиенты
+    subgraph Clients[Clients]
+        FE[Web App]
+    end
+
+    %% Слева: идентификация и платежи
     subgraph IdP[Identity]
         KC[Keycloak]
     end
@@ -41,16 +46,16 @@ flowchart LR
         Tpay[Tpay]
     end
 
-    %% Центральная система
+    %% Центр: система
     subgraph Core[System]
         direction TB
         Gateway[API Gateway BFF]
         Services[Microservices Go]
-        Data[(Data Stores: PostgreSQL / Redis / S3)]
+        Data[(Data Stores - PostgreSQL, Redis, S3)]
         Bus[(Kafka EventBus)]
     end
 
-    %% Внешние блоки справа
+    %% Справа: уведомления, аналитика, ops
     subgraph Notify[Notifications]
         Push[Push Service]
         Mail[SMTP Email]
@@ -66,13 +71,16 @@ flowchart LR
         CDN[CDN]
         Mon[Prometheus Grafana]
         Logs[ELK Loki DLP]
-        FEerr[Sentry (Frontend)]
+        FEerr[Sentry Frontend]
     end
 
     %% Потоки
+    FE --> Gateway
     Gateway <--> KC
+
     Services --> Tpay
     Tpay --> Services
+
     Services --> Data
     Services <--> Bus
 
@@ -83,12 +91,12 @@ flowchart LR
     Bus --> Carrot
     Bus --> Mix
 
-    %% CDN раздаёт напрямую клиентам
+    %% CDN: клиент по presigned URL, origin — S3
+    FE --> CDN
     Data --> CDN
-    CDN --> Gateway
 
     %% Мониторинг и ошибки
     Services --> Mon
     Services --> Logs
-    Gateway --> FEerr
+    FE --> FEerr
 ```
