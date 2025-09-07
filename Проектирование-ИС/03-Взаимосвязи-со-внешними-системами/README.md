@@ -79,8 +79,9 @@ flowchart LR
     Gateway <--> KC
     Gateway --> Services
 
-    Services --> Tpay
-    Tpay --> Services
+    %% Взаимодействие с Tpay через Gateway
+    Services --> Gateway
+    Tpay --> Gateway
 
     Services --> Data
     Services <--> Bus
