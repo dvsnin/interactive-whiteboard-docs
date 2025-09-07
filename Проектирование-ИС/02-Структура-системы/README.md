@@ -47,11 +47,22 @@ flowchart TB
         S7[AdminService]
     end
 
+    subgraph Infra[Фоновые задачи]
+        CJ[CronJobs]
+    end
+
     subgraph Data[Хранилища и события]
         D1[(PostgreSQL)]
         D2[(Redis)]
         D3[(S3 Object Storage: JSON схемы досок + медиа)]
         D4[(Kafka EventBus)]
+    end
+
+    subgraph Consumers[Внешние консьюмеры]
+        C1[Push Service]
+        C2[Carrot Quest]
+        C3[Mixpanel]
+        C4[Analytics/Dashboards]
     end
 
     A --> G1
@@ -71,7 +82,7 @@ flowchart TB
     S6 --> D1
     S7 --> D1
 
-    %% Kafka как шина событий
+    %% Kafka как общий EventBus
     S1 --> D4
     S2 --> D4
     S3 --> D4
@@ -79,4 +90,15 @@ flowchart TB
     S5 --> D4
     S6 --> D4
     S7 --> D4
+
+    %% CronJobs работают с БД, Kafka и S3
+    CJ --> D1
+    CJ --> D3
+    CJ --> D4
+
+    %% Консьюмеры Kafka
+    D4 --> C1
+    D4 --> C2
+    D4 --> C3
+    D4 --> C4
 ```
