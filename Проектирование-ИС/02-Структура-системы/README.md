@@ -91,12 +91,15 @@ flowchart TB
     S6 --> D4
     S7 --> D4
 
+    %% NotificationService также читает события из Kafka (outbox-паттерн)
+    D4 --> S6
+
     %% CronJobs работают с БД, Kafka и S3
     CJ --> D1
     CJ --> D3
     CJ --> D4
 
-    %% Консьюмеры Kafka
+    %% Консьюмеры Kafka во внешние системы
     D4 --> C1
     D4 --> C2
     D4 --> C3
