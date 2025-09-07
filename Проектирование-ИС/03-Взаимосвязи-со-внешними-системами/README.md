@@ -19,26 +19,25 @@
 
 > Примечание: схемы событий фиксируются в Schema Registry (JSON-Schema/Proto). Вебхуки валидируются по подписи/secret.
 
-## Диаграмма взаимодействий (высокоуровнево)
+## Диаграмма взаимодействий (по уровням)
 
 ```mermaid
-flowchart LR
-    %% Внутренняя система
-    subgraph System[System]
-        direction TB
+flowchart TB
+    %% Центральная система
+    subgraph Core[System (Interactive Whiteboard)]
         Gateway[API Gateway/BFF]
         Services[Microservices (Go)]
         Data[(PostgreSQL / Redis / S3)]
         Bus[(Kafka EventBus)]
     end
 
-    %% Внешние системы
+    %% Внешние блоки
     subgraph IdP[Identity Provider]
         KC[Keycloak]
     end
 
     subgraph Pay[Payments]
-        Tpay[T-pay (webhooks)]
+        Tpay[T-pay]
     end
 
     subgraph Notify[Notifications]
@@ -66,7 +65,7 @@ flowchart LR
     Services --> Data
     Services <--> Bus
 
-    %% Уведомления и аналитика из EventBus
+    %% Уведомления и аналитика через EventBus
     Bus --> Push
     Bus --> Mail
     Bus --> Chats
