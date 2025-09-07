@@ -28,85 +28,98 @@
 ## Архитектура (логическая схема)
 
 ```mermaid
-flowchart TB
-    %% Уровень 1: клиенты
-    subgraph Client[Клиенты]
-        A[Web/Mobile App]
+flowchart LR
+    %% ===== Колонка 1: клиенты =====
+    subgraph Col1[ ]
+    direction TB
+        ios[iOS App]
+        android[Android App]
+        web[Web App]
     end
 
-    %% Уровень 2: gateway
-    subgraph Gateway[API Gateway / BFF]
-        G1[REST/gRPC API]
+    %% ===== Колонка 2: шлюз/авторизация =====
+    subgraph Col2[ ]
+    direction TB
+        gw[API Gateway / BFF]
+        auth[AuthService]
     end
 
-    %% Уровень 3: микросервисы
-    subgraph Services[Микросервисы на Go]
-        S1[AuthService]
-        S2[BoardService]
-        S3[CollabService]
-        S4[FileService]
-        S5[PaymentService]
-        S6[NotificationService]
-        S7[AdminService]
+    %% ===== Колонка 3: микросервисы (Go) =====
+    subgraph Col3[ ]
+    direction TB
+        board[BoardService]
+        collab[CollabService]
+        file[FileService]
+        pay[PaymentService]
+        admin[AdminService]
+        notify[NotificationService]
     end
 
-    %% Уровень 4: хранилища и события
-    subgraph Data[Хранилища и события]
-        D1[(PostgreSQL)]
-        D2[(Redis)]
-        D3[(S3 Object Storage: JSON схемы досок + медиа)]
-        D4[(Kafka EventBus)]
+    %% ===== Колонка 4: данные/события/фон =====
+    subgraph Col4[ ]
+    direction TB
+        redis[(Redis)]
+        kafka[(Kafka EventBus)]
+        s3[(S3: JSON схемы досок + медиа)]
+        pg[(PostgreSQL)]
+        cron[CronJobs]
     end
 
-    %% Уровень 5: фоновые задачи
-    subgraph Infra[Фоновые задачи]
-        CJ[CronJobs]
+    %% ===== Колонка 5: внешние потребители =====
+    subgraph Col5[Внешние консьюмеры]
+    direction TB
+        push[Push Service]
+        carrot[Carrot Quest]
+        mix[Mixpanel]
+        dash[Analytics / Dashboards]
+        tpay[T-pay]
     end
 
-    %% Уровень 6: внешние консьюмеры
-    subgraph Consumers[Внешние консьюмеры]
-        C1[Push Service]
-        C2[Carrot Quest]
-        C3[Mixpanel]
-        C4[Analytics/Dashboards]
-    end
+    %% --- Потоки сверху вниз и слева направо ---
+    ios --> gw
+    android --> gw
+    web --> gw
 
-    %% связи
-    A --> G1
-    G1 --> S1
-    G1 --> S2
-    G1 --> S3
-    G1 --> S4
-    G1 --> S5
-    G1 --> S6
-    G1 --> S7
+    gw --> auth
+    gw --> board
+    gw --> collab
+    gw --> file
+    gw --> pay
+    gw --> admin
+    gw --> notify
 
-    S2 --> D1
-    S3 --> D2
-    S2 --> D3
-    S4 --> D3
-    S5 --> D1
-    S6 --> D1
-    S7 --> D1
+    %% Микросервисы -> хранилища
+    board --> pg
+    pay --> pg
+    admin --> pg
+    notify --> pg
+    collab --> redis
+    file --> s3
+    board --> s3
 
-    %% Kafka как шина
-    S1 --> D4
-    S2 --> D4
-    S3 --> D4
-    S4 --> D4
-    S5 --> D4
-    S6 --> D4
-    S7 --> D4
-    D4 --> S6
+    %% Kafka как общая шина
+    auth --> kafka
+    board --> kafka
+    collab --> kafka
+    file --> kafka
+    pay --> kafka
+    admin --> kafka
+    notify --> kafka
+    kafka --> notify  %% NotificationService читает события (outbox)
 
-    %% CronJobs
-    CJ --> D1
-    CJ --> D3
-    CJ --> D4
+    %% CronJobs работают с БД/S3/Kafka
+    cron --> pg
+    cron --> s3
+    cron --> kafka
 
-    %% Консьюмеры Kafka
-    D4 --> C1
-    D4 --> C2
-    D4 --> C3
-    D4 --> C4
+    %% Внешние интеграции
+    kafka --> push
+    kafka --> carrot
+    kafka --> mix
+    kafka --> dash
+    pay --> tpay
+
+    %% Небольшой тюнинг ширины узлов
+    classDef wide fill:#fff,stroke:#bbb;
+    class gw,auth,board,collab,file,pay,admin,notify,redis,kafka,s3,pg,cron,push,carrot,mix,dash,tpay wide;
 ```
