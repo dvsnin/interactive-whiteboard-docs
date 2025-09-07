@@ -29,14 +29,17 @@
 
 ```mermaid
 flowchart TB
+    %% Уровень 1: клиенты
     subgraph Client[Клиенты]
         A[Web/Mobile App]
     end
 
+    %% Уровень 2: gateway
     subgraph Gateway[API Gateway / BFF]
         G1[REST/gRPC API]
     end
 
+    %% Уровень 3: микросервисы
     subgraph Services[Микросервисы на Go]
         S1[AuthService]
         S2[BoardService]
@@ -47,10 +50,7 @@ flowchart TB
         S7[AdminService]
     end
 
-    subgraph Infra[Фоновые задачи]
-        CJ[CronJobs]
-    end
-
+    %% Уровень 4: хранилища и события
     subgraph Data[Хранилища и события]
         D1[(PostgreSQL)]
         D2[(Redis)]
@@ -58,6 +58,12 @@ flowchart TB
         D4[(Kafka EventBus)]
     end
 
+    %% Уровень 5: фоновые задачи
+    subgraph Infra[Фоновые задачи]
+        CJ[CronJobs]
+    end
+
+    %% Уровень 6: внешние консьюмеры
     subgraph Consumers[Внешние консьюмеры]
         C1[Push Service]
         C2[Carrot Quest]
@@ -65,6 +71,7 @@ flowchart TB
         C4[Analytics/Dashboards]
     end
 
+    %% связи
     A --> G1
     G1 --> S1
     G1 --> S2
@@ -82,7 +89,7 @@ flowchart TB
     S6 --> D1
     S7 --> D1
 
-    %% Kafka как общий EventBus
+    %% Kafka как шина
     S1 --> D4
     S2 --> D4
     S3 --> D4
@@ -90,16 +97,14 @@ flowchart TB
     S5 --> D4
     S6 --> D4
     S7 --> D4
-
-    %% NotificationService также читает события из Kafka (outbox-паттерн)
     D4 --> S6
 
-    %% CronJobs работают с БД, Kafka и S3
+    %% CronJobs
     CJ --> D1
     CJ --> D3
     CJ --> D4
 
-    %% Консьюмеры Kafka во внешние системы
+    %% Консьюмеры Kafka
     D4 --> C1
     D4 --> C2
     D4 --> C3
