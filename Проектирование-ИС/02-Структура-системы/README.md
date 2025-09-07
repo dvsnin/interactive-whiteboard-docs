@@ -25,103 +25,70 @@
 
 > **Kafka используется как единая шина событий**: все микросервисы могут публиковать туда доменные события (например, действия пользователей, изменения досок, платежи), а отдельные консьюмеры разбирают их для аналитики, уведомлений и интеграций с внешними сервисами.
 
-## Архитектура (логическая схема)
+## Архитектура (логическая схема, упрощённая)
 
 ```mermaid
 flowchart LR
-    %% ===== Колонка 1: клиенты =====
-    subgraph Col1[ ]
-    direction TB
-        ios[iOS App]
-        android[Android App]
-        web[Web App]
+    %% Колонка 1: клиенты
+    subgraph Clients[Клиенты]
+        A1[Web App]
+        A2[Android App]
+        A3[iOS App]
     end
 
-    %% ===== Колонка 2: шлюз/авторизация =====
-    subgraph Col2[ ]
-    direction TB
-        gw[API Gateway / BFF]
-        auth[AuthService]
+    %% Колонка 2: API
+    subgraph Gateway[API Gateway / BFF]
+        GW[REST/gRPC API]
     end
 
-    %% ===== Колонка 3: микросервисы (Go) =====
-    subgraph Col3[ ]
-    direction TB
-        board[BoardService]
-        collab[CollabService]
-        file[FileService]
-        pay[PaymentService]
-        admin[AdminService]
-        notify[NotificationService]
+    %% Колонка 3: микросервисы
+    subgraph Services[Микросервисы на Go]
+        direction TB
+        Auth[AuthService]
+        Board[BoardService]
+        Collab[CollabService]
+        File[FileService]
+        Payment[PaymentService]
+        Admin[AdminService]
+        Notify[NotificationService]
     end
 
-    %% ===== Колонка 4: данные/события/фон =====
-    subgraph Col4[ ]
-    direction TB
-        redis[(Redis)]
-        kafka[(Kafka EventBus)]
-        s3[(S3: JSON схемы досок + медиа)]
-        pg[(PostgreSQL)]
-        cron[CronJobs]
+    %% Колонка 4: данные
+    subgraph Data[Хранилища и события]
+        direction TB
+        PG[(PostgreSQL)]
+        Redis[(Redis)]
+        S3[(S3 Object Storage)]
+        Kafka[(Kafka EventBus)]
     end
 
-    %% ===== Колонка 5: внешние потребители =====
-    subgraph Col5[Внешние консьюмеры]
-    direction TB
-        push[Push Service]
-        carrot[Carrot Quest]
-        mix[Mixpanel]
-        dash[Analytics / Dashboards]
-        tpay[T-pay]
+    %% Колонка 5: фоновые задачи
+    subgraph Jobs[Фоновые задачи]
+        Cron[CronJobs]
     end
 
-    %% --- Потоки слева направо ---
-    ios --> gw
-    android --> gw
-    web --> gw
+    %% Колонка 6: внешние консьюмеры
+    subgraph Consumers[Внешние консьюмеры]
+        Push[Push Service]
+        Carrot[Carrot Quest]
+        Mix[Mixpanel]
+        Dash[Analytics/Dashboards]
+        Tpay[T-pay]
+    end
 
-    gw --> auth
-    gw --> board
-    gw --> collab
-    gw --> file
-    gw --> pay
-    gw --> admin
-    gw --> notify
+    %% Связи верхнеуровневые
+    A1 --> GW
+    A2 --> GW
+    A3 --> GW
 
-    %% Микросервисы -> хранилища
-    board --> pg
-    pay --> pg
-    admin --> pg
-    notify --> pg
-    collab --> redis
-    file --> s3
-    board --> s3
+    GW --> Services
+    Services --> Data
+    Services --> Kafka
+    Kafka --> Services
 
-    %% Kafka как общая шина
-    auth --> kafka
-    board --> kafka
-    collab --> kafka
-    file --> kafka
-    pay --> kafka
-    admin --> kafka
-    notify --> kafka
+    Jobs --> Data
+    Jobs --> Kafka
 
-    %% NotificationService читает события из Kafka (outbox)
-    kafka --> notify
-
-    %% CronJobs работают с БД/S3/Kafka
-    cron --> pg
-    cron --> s3
-    cron --> kafka
-
-    %% Внешние интеграции
-    kafka --> push
-    kafka --> carrot
-    kafka --> mix
-    kafka --> dash
-    pay --> tpay
-
-    %% Немного стилей
-    classDef wide fill:#fff,stroke:#bbb;
-    class gw,auth,board,collab,file,pay,admin,notify,redis,kafka,s3,pg,cron,push,carrot,mix,dash,tpay wide;
+    Kafka --> Consumers
+    Payment --> Tpay
 ```
