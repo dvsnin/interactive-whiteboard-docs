@@ -24,35 +24,35 @@
 ```mermaid
 flowchart LR
     %% Внутренняя система
-    subgraph System[Онлайн-доска (внутренние компоненты)]
+    subgraph System[System]
         direction TB
         Gateway[API Gateway/BFF]
-        Services[Микросервисы на Go]
-        Data[(PostgreSQL/Redis/S3)]
+        Services[Microservices (Go)]
+        Data[(PostgreSQL / Redis / S3)]
         Bus[(Kafka EventBus)]
     end
 
-    %% Внешние смежные
-    subgraph IdP[Идентификация]
+    %% Внешние системы
+    subgraph IdP[Identity Provider]
         KC[Keycloak]
     end
 
-    subgraph Pay[Платежи]
+    subgraph Pay[Payments]
         Tpay[T-pay (webhooks)]
     end
 
-    subgraph Notify[Уведомления]
+    subgraph Notify[Notifications]
         Push[FCM/APNs]
         Mail[SMTP/Email]
         Chats[Slack/Telegram]
     end
 
-    subgraph Analytics[Аналитика]
+    subgraph Analytics[Analytics]
         Carrot[Carrot Quest]
         Mix[Mixpanel]
     end
 
-    subgraph Ops[Мониторинг/Логи/CDN]
+    subgraph Ops[Monitoring/Logs/CDN]
         CDN[CDN]
         Mon[Prometheus/Grafana]
         Sentry[Sentry]
@@ -80,3 +80,4 @@ flowchart LR
     Services --> Mon
     Services --> Sentry
     Services --> Logs
+```
