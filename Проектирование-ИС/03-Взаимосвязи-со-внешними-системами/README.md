@@ -93,7 +93,6 @@ flowchart LR
 
     %% CDN: клиент по presigned URL, origin — S3
     FE --> CDN
-    Data --> CDN
 
     %% Мониторинг и ошибки
     Services --> Mon
