@@ -74,8 +74,8 @@ flowchart LR
     Bus --> Carrot
     Bus --> Mix
 
-    %% Экспорт статики/медиа
-    Data --> CDN
+    %% Экспорт статики/медиа через сервисы
+    Services --> CDN
 
     %% Мониторинг и ошибки
     Services --> Mon
