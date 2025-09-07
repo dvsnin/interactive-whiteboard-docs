@@ -17,7 +17,7 @@
 | Логи/Аудит        | ELK/Loki, DLP                       | Централизованные логи, контроль утечек          |
 | Event Bus         | Kafka                               | Доменные события и интеграционные потоки        |
 
-> Примечание: схемы событий фиксируются в Schema Registry (JSON-Schema/Proto). Вебхуки валидируются по подписи/secret.
+> Схемы событий фиксируются в Schema Registry (JSON-Schema/Proto). Вебхуки валидируются по подписи/secret.
 
 ## Диаграмма взаимодействий (по уровням)
 
@@ -45,7 +45,7 @@ flowchart LR
     subgraph Notify[Notifications]
         Push[Push Service]
         Mail[SMTP Email]
-        Chats[Slack Telegram]
+        Chats[Max Telegram]
     end
 
     subgraph Analytics[Analytics]
