@@ -5,22 +5,22 @@
 Интерактивная онлайн-доска для совместной работы в реальном времени (аналог Miro).  
 Система построена на микросервисной архитектуре с поддержкой горизонтального масштабирования.  
 Хранение версий и состояние досок реализовано через S3-хранилище в формате JSON-схем.
+Бэкенд реализован на языке *Go (Golang)*
 
 ## Основные компоненты системы
 
-| Компонент              | Описание                                                                    |
-|------------------------|-----------------------------------------------------------------------------|
-| Frontend               | Веб-клиент (React, WebSocket, REST)                                         |
-| AuthService            | Аутентификация и авторизация (Gatekeeper, Keycloak, JWT, OAuth2/OIDC, RBAC) |
-| BoardService           | CRUD-досок, хранение метаданных в PostgreSQL                                |
-| CollabService          | Совместное редактирование в реальном времени (WebSocket)                    |
-| FileService            | Загрузка файлов, хранение медиа в S3, генерация presigned URL               |
-| PaymentService         | Интеграция с платёжными провайдерами (T-pay) через webhooks                 |
-| NotificationService    | Email/Push/Chats уведомления                                                |
-| AdminService           | Панель администратора, управление пользователями и тарифами                 |
-| Monitoring/Logging     | Метрики (Prometheus, Grafana), логи и аудит (ELK, Jaeger, DLP)              |
-
----
+| Компонент              | Описание                                                                                         |
+|------------------------|--------------------------------------------------------------------------------------------------|
+| Frontend               | Веб-клиент (React, WebSocket, REST)                                                              |
+| AuthService            | Аутентификация и авторизация (Gatekeeper, Keycloak, JWT, OAuth2/OIDC, RBAC)                      |
+| BoardService           | CRUD-досок, хранение метаданных в PostgreSQL                                                     |
+| CollabService          | Совместное редактирование в реальном времени (WebSocket)                                         |
+| FileService            | Загрузка файлов, хранение медиа в S3, генерация presigned URL                                    |
+| PaymentService         | Интеграция с платёжными провайдерами (T-pay) через webhooks                                      |
+| NotificationService    | Email/Push/Chats уведомления                                                                     |
+| AdminService           | Панель администратора, управление пользователями и тарифами                                      |
+| Monitoring/Logging     | Метрики (Prometheus, Grafana), логи и аудит (ELK, Jaeger, DLP)                                   |
+| Kafka / EventBus       | Очереди сообщений и событий, аналитика, интеграция с внешними сервисами (carrot quest, mixpanel) |
 
 ## Архитектура (логическая схема)
 
@@ -34,7 +34,7 @@ flowchart TB
         G1[REST/gRPC API]
     end
 
-    subgraph Services[Микросервисы]
+    subgraph Services[Микросервисы на Go]
         S1[AuthService]
         S2[BoardService]
         S3[CollabService]
@@ -44,10 +44,11 @@ flowchart TB
         S7[AdminService]
     end
 
-    subgraph Data[Хранилища]
+    subgraph Data[Хранилища и события]
         D1[(PostgreSQL)]
         D2[(Redis)]
         D3[(S3 Object Storage: JSON схемы досок + медиа)]
+        D4[(Kafka EventBus)]
     end
 
     A --> G1
@@ -66,4 +67,13 @@ flowchart TB
     S5 --> D1
     S6 --> D1
     S7 --> D1
+
+    %% Kafka как шина событий
+    S1 --> D4
+    S2 --> D4
+    S3 --> D4
+    S4 --> D4
+    S5 --> D4
+    S6 --> D4
+    S7 --> D4
 ```
