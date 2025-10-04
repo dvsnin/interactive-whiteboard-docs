@@ -17,5 +17,5 @@ jobs:
         uses: appleboy/telegram-action@master
         with:
           to: 7701325227
-          token: 8442620303:AAEFRUasmqnjKN11IqXPYG0mUBw374lY9V4
+          token: ${{ secrets.TG_BOT_TOKEN }}
           message: "✅ Deploy успешный!"
