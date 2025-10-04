@@ -11,5 +11,5 @@ func main() {
 }
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "pong")
+	fmt.Fprint(w, "pong\n")
 }
