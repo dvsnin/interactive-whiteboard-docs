@@ -47,4 +47,4 @@ jobs:
         with:
           to: 7701325227
           token: ${{ secrets.TG_BOT_TOKEN }}
-          message: "🚀 Deploy успешный в production!"
+          message: "🚀 Успешный деплой в прод!"
