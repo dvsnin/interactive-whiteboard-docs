@@ -53,13 +53,18 @@ jobs:
           sleep 3
           echo "✅ Production deploy complete!"
 
+      - name: Get short SHA
+        id: vars
+        run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Notify Telegram
         if: success()
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_BOT_TOKEN }}
+          format: markdown
           message: |
             **Deploy to Production**
             Date: ${{ github.event.head_commit.timestamp }}
-            Commit: ${{ github.actor }}: ${{ env.short_sha }}
+            Commit: [${{ github.actor }}: ${{ env.short_sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
