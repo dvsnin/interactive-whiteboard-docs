@@ -7,5 +7,4 @@ FROM debian:stable-slim
 WORKDIR /root/
 COPY --from=builder /app/software_engineering/server .
 EXPOSE 8080
-
 CMD ["./server"]
