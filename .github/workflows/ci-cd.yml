@@ -49,9 +49,9 @@ jobs:
     steps:
       - name: Fake deploy to production
         run: |
-          echo "🚀 Deploying to PRODUCTION..."
+          echo "Deploying to PRODUCTION..."
           sleep 3
-          echo "✅ Production deploy complete!"
+          echo "Production deploy complete!"
 
       - name: Get short SHA
         id: vars
