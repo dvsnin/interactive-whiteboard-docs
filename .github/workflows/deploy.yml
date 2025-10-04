@@ -1,0 +1,21 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fake deploy
+        run: echo "🚀 Deploy successful!"
+
+      - name: Notify Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: 7701325227
+          token: 8442620303:AAEFRUasmqnjKN11IqXPYG0mUBw374lY9V4
+          message: "✅ Deploy успешный!"
