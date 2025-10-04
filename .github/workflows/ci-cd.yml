@@ -34,13 +34,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
-      url: https://example.com
     steps:
-      - name: Wait for manual approval
-        uses: hmarr/auto-approve-action@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Fake deploy
         run: |
           echo "🚀 Deploying to production..."
