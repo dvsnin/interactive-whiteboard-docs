@@ -62,4 +62,4 @@ jobs:
           message: |
             **Deploy to Production**
             Date: ${{ github.event.head_commit.timestamp }}
-            Commit: ${{ github.actor }} pushed ${{ github.sha::0:7 }} ${{ github.ref_name }}
+            Commit: ${{ github.actor }}: ${{ env.short_sha }}
