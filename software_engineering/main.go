@@ -7,9 +7,11 @@ import (
 
 func main() {
 	http.HandleFunc("/ping", PingHandler)
-	http.ListenAndServe(":8080", nil)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
 }
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "pong\n")
+	_, _ = fmt.Fprint(w, "pong\n")
 }
