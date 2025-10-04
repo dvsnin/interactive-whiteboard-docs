@@ -57,6 +57,12 @@ jobs:
         id: vars
         run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
+      - name: Find associated PR
+        id: find_pr
+        uses: jwalton/gh-find-current-pr@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Notify Telegram
         if: success()
         uses: appleboy/telegram-action@master
@@ -67,6 +73,6 @@ jobs:
           message: |
             **Release**
             Date: ${{ github.event.head_commit.timestamp }}
-            MR: [#${{ steps.find_pr.outputs.number }}](https://github.com/${{ github.repository }}/pull/${{ steps.find_pr.outputs.number }})
+            MR: [#${{ steps.find_pr.outputs.number }}](${{ steps.find_pr.outputs.url }})
             Pipeline: [${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             Author: [${{ github.actor }}](https://github.com/${{ github.actor }})
