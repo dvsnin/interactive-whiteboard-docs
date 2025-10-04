@@ -61,6 +61,5 @@ jobs:
           token: ${{ secrets.TG_BOT_TOKEN }}
           message: |
             **Deploy to Production**
-            Status: Successful
             Date: ${{ github.event.head_commit.timestamp }}
             Commit: ${{ github.actor }}: ${{ env.short_sha }}
