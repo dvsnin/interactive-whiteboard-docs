@@ -16,7 +16,7 @@ func TestPingHandler(t *testing.T) {
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	if string(body) != "pong" {
+	if string(body) != "pong\n" {
 		t.Errorf("ожидали pong, получили %s", string(body))
 	}
 }
