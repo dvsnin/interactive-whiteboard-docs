@@ -11,11 +11,23 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Fake deploy
-        run: echo "🚀 Deploy successful!"
+        run: |
+          echo "🚀 Запускаю мок-деплой..."
+          sleep 5
+          echo "✅ Мок-деплой завершен успешно!"
 
-      - name: Notify Telegram
+      - name: Notify Telegram (success)
+        if: success()
         uses: appleboy/telegram-action@master
         with:
-          to: 7701325227
+          to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_BOT_TOKEN }}
-          message: "✅ Deploy успешный!"
+          message: "🚀 Deploy успешный (mock)!"
+
+      - name: Notify Telegram (fail)
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_CHAT_ID }}
+          token: ${{ secrets.TG_BOT_TOKEN }}
+          message: "❌ Deploy провалился (mock)!"
