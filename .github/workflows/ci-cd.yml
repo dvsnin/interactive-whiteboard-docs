@@ -67,5 +67,6 @@ jobs:
           message: |
             **Deploy to Production**
             Date: ${{ github.event.head_commit.timestamp }}
-            Commit: [${{ github.actor }}](https://github.com/${{ github.actor }}): [${{ env.short_sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            Commit: [${{ env.short_sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
             Pipeline: [${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            Author: [${{ github.actor }}](https://github.com/${{ github.actor }})
