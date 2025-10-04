@@ -63,4 +63,4 @@ jobs:
             **Deploy to Production**
             Status: Successful
             Date: ${{ github.event.head_commit.timestamp }}
-            Commit: ${{ github.actor }} pushed ${{ env.short_sha }} ${{ github.ref_name }}
+            Commit: ${{ github.actor }}: ${{ env.short_sha }}
