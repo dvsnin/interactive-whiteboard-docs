@@ -60,9 +60,6 @@ jobs:
           to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_BOT_TOKEN }}
           message: |
-            🚀 *Deploy to Production*  
-            ✅ Status: Successful  
-            📅 Date: ${{ github.event.head_commit.timestamp }}  
-            🕒 Time: $(date -u +"%H:%M:%S UTC")  
-            🔖 Commit: `${{ github.sha }}`  
-            👤 Author: ${{ github.actor }}
+            **Deploy to Production**
+            Date: ${{ github.event.head_commit.timestamp }}
+            Commit: ${{ github.actor }} pushed ${{ github.sha::0:7 }} ${{ github.ref_name }}
