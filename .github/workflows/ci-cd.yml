@@ -65,8 +65,8 @@ jobs:
           token: ${{ secrets.TG_BOT_TOKEN }}
           format: markdown
           message: |
-            **Deploy to Production**
+            **Release**
             Date: ${{ github.event.head_commit.timestamp }}
-            Commit: [${{ env.short_sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            MR: [#${{ steps.find_pr.outputs.number }}](https://github.com/${{ github.repository }}/pull/${{ steps.find_pr.outputs.number }})
             Pipeline: [${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             Author: [${{ github.actor }}](https://github.com/${{ github.actor }})
