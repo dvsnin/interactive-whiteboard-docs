@@ -6,7 +6,7 @@ on:
       - "**"
   push:
     branches:
-      - main
+      - "**"
 
 jobs:
   build:
@@ -28,23 +28,41 @@ jobs:
       - name: Run tests
         run: go test ./software_engineering -v
 
-  deploy:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: test
+    environment:
+      name: dev
+    steps:
+      - name: Fake deploy to dev
+        run: |
+          echo "🚀 Deploying to DEV environment..."
+          sleep 2
+          echo "✅ Dev deploy complete!"
+
+  deploy-prod:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
     steps:
-      - name: Fake deploy
+      - name: Fake deploy to production
         run: |
-          echo "🚀 Deploying to production..."
+          echo "🚀 Deploying to PRODUCTION..."
           sleep 3
-          echo "✅ Deploy complete!"
+          echo "✅ Production deploy complete!"
 
       - name: Notify Telegram
         if: success()
         uses: appleboy/telegram-action@master
         with:
-          to: 7701325227
+          to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_BOT_TOKEN }}
-          message: "🚀 Успешный деплой в прод!"
+          message: |
+            🚀 *Deploy to Production*  
+            ✅ Status: Successful  
+            📅 Date: ${{ github.event.head_commit.timestamp }}  
+            🕒 Time: $(date -u +"%H:%M:%S UTC")  
+            🔖 Commit: `${{ github.sha }}`  
+            👤 Author: ${{ github.actor }}
