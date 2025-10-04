@@ -36,9 +36,9 @@ jobs:
     steps:
       - name: Fake deploy to dev
         run: |
-          echo "🚀 Deploying to DEV environment..."
+          echo "Deploying to DEV environment..."
           sleep 2
-          echo "✅ Dev deploy complete!"
+          echo "Dev deploy complete!"
 
   deploy-prod:
     runs-on: ubuntu-latest
