@@ -17,7 +17,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.22"
+          go-version: "1.23"
 
       - name: Run tests
         run: go test ./software_engineering -v
@@ -29,5 +29,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build Docker image
+      - name: Build docker image
         run: docker build -t myapp:latest .

@@ -6,15 +6,17 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Fake deploy
         run: |
-          echo "🚀 Запускаю мок-деплой..."
-          sleep 5
-          echo "✅ Мок-деплой завершен успешно!"
+          echo "🚀 Мок-деплой..."
+          sleep 3
+          echo "✅ Деплой завершен!"
 
       - name: Notify Telegram (success)
         if: success()
@@ -22,7 +24,7 @@ jobs:
         with:
           to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_BOT_TOKEN }}
-          message: "🚀 Deploy успешный (mock)!"
+          message: "🚀 Deploy успешный!"
 
       - name: Notify Telegram (fail)
         if: failure()
@@ -30,4 +32,4 @@ jobs:
         with:
           to: ${{ secrets.TG_CHAT_ID }}
           token: ${{ secrets.TG_BOT_TOKEN }}
-          message: "❌ Deploy провалился (mock)!"
+          message: "❌ Deploy упал!"
