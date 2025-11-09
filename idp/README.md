@@ -24,55 +24,64 @@
 
 ```mermaid
 flowchart LR
+    %% Колонка 1: клиенты
     subgraph Clients[Клиенты]
-        Web[Web App (React)]
+        A1[Web App]
     end
+
+    %% Колонка 2: API
     subgraph Gateway[API Gateway / BFF]
         GW[REST/gRPC API]
     end
-    subgraph Services[Микросервисы (Go)]
+
+    %% Колонка 3: микросервисы
+    subgraph Services[Микросервисы на Go]
+        direction TB
         Auth[AuthService]
         Board[BoardService]
         Collab[CollabService]
         File[FileService]
         Payment[PaymentService]
-        Notify[NotificationService]
         Admin[AdminService]
+        Notify[NotificationService]
     end
-    subgraph Data[Хранилища]
+
+    %% Колонка 4: данные
+    subgraph Data[Хранилища и события]
+        direction TB
         PG[(PostgreSQL)]
         Redis[(Redis)]
         S3[(S3 Object Storage)]
         Kafka[(Kafka EventBus)]
     end
+
+    %% Колонка 5: фоновые задачи
     subgraph Jobs[Фоновые задачи]
         Cron[CronJobs]
     end
-    subgraph External[Внешние системы]
-        KC[Keycloak]
-        Tpay[T-pay]
-        CDN[CDN]
-        Mix[Mixpanel]
+
+    %% Колонка 6: внешние консьюмеры
+    subgraph Consumers[Внешние консьюмеры]
+        Push[Push Service]
         Carrot[Carrot Quest]
-        Push[Push/Email/Chat]
-        Mon[Prometheus/Grafana]
-        Logs[ELK/Loki]
+        Mix[Mixpanel]
+        Dash[Analytics/Dashboards]
+        Tpay[T-pay]
     end
-    Web --> GW
+
+    %% Связи верхнеуровневые
+    A1 --> GW
+
     GW --> Services
     Services --> Data
     Services --> Kafka
     Kafka --> Services
-    Kafka --> Mix
-    Kafka --> Carrot
-    Kafka --> Push
+
+    Jobs --> Data
+    Jobs --> Kafka
+
+    Kafka --> Consumers
     Payment --> Tpay
-    File --> S3
-    S3 --> CDN
-    Auth --> KC
-    Services --> Mon
-    Services --> Logs
-    Cron --> Data
 ```
 
 ### Описание уровней
