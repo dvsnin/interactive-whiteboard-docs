@@ -217,26 +217,26 @@ erDiagram
 
 ```mermaid
 flowchart LR
-    subgraph Backend[Бэкенд (Go)]
-        BoardService[BoardService — управление досками]
-        CollabService[CollabService — реальное время]
-        FileService[FileService — файлы и S3]
-        PaymentService[PaymentService — платежи]
-        NotifyService[NotificationService — уведомления]
+    subgraph Backend["Backend (Go microservices)"]
+        BoardService["BoardService — board management"]
+        CollabService["CollabService — real-time sync"]
+        FileService["FileService — file and S3 handling"]
+        PaymentService["PaymentService — payments"]
+        NotifyService["NotificationService — notifications"]
     end
 
-    subgraph Storage[Хранилища]
-        PG[(PostgreSQL)]
-        Redis[(Redis)]
-        S3[(S3 Storage)]
-        Kafka[(Kafka)]
+    subgraph Storage["Storage & Message Bus"]
+        PG["PostgreSQL"]
+        Redis["Redis"]
+        S3["S3 Object Storage"]
+        Kafka["Kafka"]
     end
 
-    subgraph External[Внешние системы]
-        Keycloak[Keycloak — аутентификация]
-        Tpay[Tpay — платёжный шлюз]
-        Analytics[Mixpanel / CarrotQuest]
-        Monitor[Prometheus / Grafana]
+    subgraph External["External Systems"]
+        Keycloak["Keycloak — authentication"]
+        Tpay["Tpay — payment gateway"]
+        Analytics["Mixpanel / CarrotQuest — analytics"]
+        Monitor["Prometheus / Grafana — monitoring"]
     end
 
     BoardService --> PG
