@@ -86,12 +86,12 @@ flowchart LR
 
 ### Описание уровней
 
-- **Frontend** — React-приложение на TypeScript, использует REST и WebSocket для синхронизации.
-- **Backend** — микросервисы на Go, взаимодействие по gRPC и через Kafka.
-- **API Gateway** — единая точка входа с проверкой токенов и маршрутизацией.
-- **Хранилища** — PostgreSQL для метаданных, Redis для сессий, S3 для версий досок.
-- **Event Bus (Kafka)** — публикация и потребление доменных событий.
-- **Внешние интеграции** — Keycloak, Tpay, CDN, аналитика, уведомления.
+- **Frontend** - React-приложение на TypeScript, использует REST и WebSocket для синхронизации.
+- **Backend** - микросервисы на Go, взаимодействие по gRPC и через Kafka.
+- **API Gateway** - единая точка входа с проверкой токенов и маршрутизацией.
+- **Хранилища** - PostgreSQL для метаданных, Redis для сессий, S3 для версий досок.
+- **Event Bus (Kafka)** - публикация и потребление доменных событий.
+- **Внешние интеграции** - Keycloak, Tpay, CDN, аналитика, уведомления.
 
 ---
 
@@ -218,11 +218,11 @@ erDiagram
 ```mermaid
 flowchart LR
     subgraph Backend["Backend (Go microservices)"]
-        BoardService["BoardService — board management"]
-        CollabService["CollabService — real-time sync"]
-        FileService["FileService — file and S3 handling"]
-        PaymentService["PaymentService — payments"]
-        NotifyService["NotificationService — notifications"]
+        BoardService["BoardService - board management"]
+        CollabService["CollabService - real-time sync"]
+        FileService["FileService - file and S3 handling"]
+        PaymentService["PaymentService - payments"]
+        NotifyService["NotificationService - notifications"]
     end
 
     subgraph Storage["Storage & Message Bus"]
@@ -233,10 +233,10 @@ flowchart LR
     end
 
     subgraph External["External Systems"]
-        Keycloak["Keycloak — authentication"]
-        Tpay["Tpay — payment gateway"]
-        Analytics["Mixpanel / CarrotQuest — analytics"]
-        Monitor["Prometheus / Grafana — monitoring"]
+        Keycloak["Keycloak - authentication"]
+        Tpay["Tpay - payment gateway"]
+        Analytics["Mixpanel / CarrotQuest - analytics"]
+        Monitor["Prometheus / Grafana - monitoring"]
     end
 
     BoardService --> PG
@@ -257,7 +257,7 @@ flowchart LR
 |--------------------------|---------------------|------------------------------------------------------------------|
 | **Frontend**             | React + TypeScript  | Высокая скорость разработки, SSR/CSR, JSX, зрелая экосистема.    |
 | **Backend**              | Go (Golang)         | Простота, высокая производительность, поддержка многопоточности. |
-| **API**                  | gRPC + REST         | gRPC — для микросервисов, REST — для фронтенда.                  |
+| **API**                  | gRPC + REST         | gRPC - для микросервисов, REST - для фронтенда.                  |
 | **PostgreSQL**           | Реляционная БД      | ACID, JSONB, масштабируемость.                                   |
 | **Redis**                | In-memory cache     | Быстрый доступ к состоянию пользователей и presence.             |
 | **S3**                   | Объектное хранилище | Хранение JSON-снимков и медиа с версионированием.                |
@@ -273,11 +273,11 @@ flowchart LR
 
 Архитектура системы обеспечивает:
 
-- **Масштабируемость** — за счёт микросервисной структуры и контейнеризации (Kubernetes).
-- **Надёжность** — PostgreSQL, Redis и S3 обеспечивают отказоустойчивость.
-- **Гибкость** — новые микросервисы добавляются без влияния на существующие.
-- **Реальное время** — через WebSocket и CollabService с Redis.
-- **Устойчивость к сбоям** — Kafka гарантирует доставку событий и интеграцию с аналитикой.
+- **Масштабируемость** - за счёт микросервисной структуры и контейнеризации (Kubernetes).
+- **Надёжность** - PostgreSQL, Redis и S3 обеспечивают отказоустойчивость.
+- **Гибкость** - новые микросервисы добавляются без влияния на существующие.
+- **Реальное время** - через WebSocket и CollabService с Redis.
+- **Устойчивость к сбоям** - Kafka гарантирует доставку событий и интеграцию с аналитикой.
 
 Система поддерживает до **1000 активных пользователей** при задержках API менее 150 мс.  
 Её можно масштабировать горизонтально, добавляя ноды и консьюмеры Kafka.  
