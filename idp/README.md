@@ -216,47 +216,37 @@ erDiagram
 ## 4. Диаграмма компонентов
 
 ```mermaid
-flowchart TB
-    subgraph Core[Система]
-        BoardService
-        CollabService
-        FileService
-        PaymentService
-        NotificationService
-        AdminService
+flowchart LR
+    subgraph Backend[Бэкенд (Go)]
+        BoardService[BoardService — управление досками]
+        CollabService[CollabService — реальное время]
+        FileService[FileService — файлы и S3]
+        PaymentService[PaymentService — платежи]
+        NotifyService[NotificationService — уведомления]
     end
-    subgraph External[Внешние системы]
-        Keycloak
-        Tpay
-        CarrotQuest
-        Mixpanel
-        FCM[Push/Email/Chats]
-        CDN
-        Prometheus
-        ELK
-    end
+
     subgraph Storage[Хранилища]
-        PostgreSQL
-        Redis
-        S3
-        Kafka
+        PG[(PostgreSQL)]
+        Redis[(Redis)]
+        S3[(S3 Storage)]
+        Kafka[(Kafka)]
     end
-    BoardService --> PostgreSQL
+
+    subgraph External[Внешние системы]
+        Keycloak[Keycloak — аутентификация]
+        Tpay[Tpay — платёжный шлюз]
+        Analytics[Mixpanel / CarrotQuest]
+        Monitor[Prometheus / Grafana]
+    end
+
+    BoardService --> PG
     CollabService --> Redis
     FileService --> S3
-    PaymentService --> PostgreSQL
     PaymentService --> Tpay
-    NotificationService --> Kafka
-    Kafka --> CarrotQuest
-    Kafka --> Mixpanel
-    Kafka --> FCM
-    BoardService --> Kafka
-    CollabService --> Kafka
-    FileService --> Kafka
-    Core --> Prometheus
-    Core --> ELK
-    FileService --> CDN
-    Core --> Keycloak
+    NotifyService --> Kafka
+    Backend --> Keycloak
+    Backend --> Monitor
+    Kafka --> Analytics
 ```
 
 ---
